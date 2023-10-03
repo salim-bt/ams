@@ -2,9 +2,9 @@ const { db } = require("../utils/db");
 
 const createEvent = async (req, res) => {
   try {
-    const { title, description, startTime, duration } = req.body;
+    const { title, description, startTime, eventType } = req.body;
     console.log(req.body)
-    if (!title || !description || !startTime || !duration) {
+    if (!title || !description || !startTime || !eventType) {
       return res.status(400).json({ error: 'All fields are required' });
     }
     
@@ -14,7 +14,7 @@ const createEvent = async (req, res) => {
         title,
         description,
         startTime,
-        duration,
+        eventType,
       },
     });
 
@@ -82,7 +82,7 @@ const deleteEventById = async (req, res) => {
     // Check if the event with the specified ID exists
     const existingEvent = await db.event.findUnique({
       where: {
-        id, // Assuming the field name in your database is "eventId"
+        id, // Assuming the field name in your database is "id"
       },
     });
 
@@ -98,7 +98,7 @@ const deleteEventById = async (req, res) => {
     });
 
     // Send a success response
-    res.status(204).end();
+    res.status(204).end(); // Changed status code to 204 (No Content) for successful deletion
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
