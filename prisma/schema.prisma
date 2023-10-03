@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+
+  url = env("DATABASE_URL")
+}
+
+model Student {
+  studentId  String       @id @db.Char(8)
+  email      String       @unique @db.Text
+  name       String       @db.Text
+  Class      Class        @relation(fields: [classId], references: [id])
+  classId    String
+  account    Account[]
+  attendance Attendance[]
+  leave      Leave[]
+}
+
+model Class {
+  id           String    @id
+  programme    String    @db.Text
+  academicYear String    @db.Text
+  semester     String    @db.Text
+  section      String    @db.Text
+  students     Student[]
+
+  @@unique([programme, academicYear, semester, section])
+}
+
+model Account {
+  student       Student @relation(fields: [studentId], references: [studentId])
+  studentId     String  @id @db.Char(8)
+  password      String  @db.Text
+  refreshTokens String  @db.Text
+  role          Role    @default(USER)
+}
+
+enum Role {
+  USER
+  ADMIN
+  MOD
+}
+
+model Event {
+  id          String       @id @default(uuid())
+  title       String       @db.Text
+  description String       @db.Text
+  startTime   DateTime
+  duration    Int
+  attendance  Attendance[]
+  leave       Leave[]
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LEAVE
+  ABSENT
+}
+
+model Attendance {
+  id        String           @id @default(uuid())
+  Event     Event            @relation(fields: [eventId], references: [id])
+  eventId   String
+  Student   Student          @relation(fields: [studentId], references: [studentId])
+  studentId String           @db.Char(8)
+  status    AttendanceStatus @default(PRESENT)
+
+  @@unique([studentId, eventId])
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Leave {
+  id            String      @id @default(uuid())
+  Student       Student     @relation(fields: [studentId], references: [studentId])
+  studentId     String      @db.Char(8)
+  Event         Event       @relation(fields: [eventId], references: [id])
+  eventId       String
+  status        LeaveStatus @default(PENDING)
+  explanation   String      @db.Text
+  attachmentURL String?     @db.Text
+
+  @@unique([eventId, studentId])
+}
