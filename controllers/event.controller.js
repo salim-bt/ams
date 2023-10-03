@@ -25,6 +25,59 @@ const createEvent = async (req, res) => {
   }
 };
 
-module.exports = {
-  createEvent
+const getAllEvents = async (req, res) => {
+  try {
+    // Retrieve all events from the database
+    const events = await db.event.findMany();
+
+    // Send the events as a JSON response
+    res.status(200).json(events);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
+
+const editEventById = async (req, res) => {
+  try {
+    const id = req.params.id; // Get the event ID from the URL parameters
+    const { title, description, startTime, duration } = req.body;
+
+    // Check if the event with the specified ID exists
+    const existingEvent = await db.event.findUnique({
+      where: {
+        id, // Assuming the field name in your database is "eventId"
+      },
+    });
+
+    if (!existingEvent) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Update the event with the new data
+    const updatedEvent = await db.event.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        description,
+        startTime,
+        duration,
+      },
+    });
+
+    // Send the updated event as a JSON response
+    res.status(200).json(updatedEvent);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+module.exports = {
+  createEvent, getAllEvents,  editEventById
+};
+
+
