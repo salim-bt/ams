@@ -51,12 +51,14 @@ const login = async (req, res) => {
 
 }
 
-const register = async (req, res, next) => {
+const register = async (req, res) => {
     console.log(req.body)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({errors: errors.array()});
     }
+
+    const {studentId, name,email, gender, programme, semester, password, section, academicYear} = req.body;
 
     // check if student already registered
     const account = await db.account.findUnique({
@@ -69,31 +71,44 @@ const register = async (req, res, next) => {
         res.status(500).json({msg:"user already registered"})
     }
 
-    const {studentId, email, gender, department, semester, password} = req.body;
     try {
         const studentClass = await db.class.findFirst({
             where:{
                 semester,
-                programme:department,
-                academicYear:"2023",
-                section:"1"
+                programme,
+                academicYear,
+                section
             }
         })
 
-        const student = await db.student.create({
-            studentId,
-            email,
-            gender,
-            classId:studentClass.id,
-            name
+        const student = await db.student.upsert({
+            where:{
+                studentId
+            },
+            update:{
+              name,
+              email,
+              gender
+            },
+            create:{
+                studentId,
+                name,
+                email,
+                gender,
+                classId:studentClass.id
+            }
         })
 
-        const account = await db.account.create({
-            studentId,
-            password
+        const hashedPassword = await hash(password,10)
+
+        await db.account.create({
+            data:{
+                studentId,
+                password:hashedPassword
+            }
         })
 
-        res.status(201).json({message: 'User registered successfully', user: newUser});
+        res.status(201).json({message: 'User registered successfully', user: student});
 
     } catch (error) {
         console.error(error);

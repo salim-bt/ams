@@ -5,9 +5,11 @@ const logger = require('morgan');
 const cors = require('cors')
 
 const authRouter = require('./routes/auth');
-const eventRouter = require('./routes/event')
-const classRouter = require('./routes/class')
-const studentRouter = require('./routes/student')
+const eventRouter = require('./routes/event');
+const classRouter = require('./routes/class');
+const studentRouter = require('./routes/student');
+const attendanceRouter = require('./routes/attendance');
+const leaveRouter = require('./routes/leave');
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use('/api/auth',authRouter);
 app.use('/api/student',studentRouter);
 app.use('/api/events',eventRouter);
 app.use('/api/class',classRouter);
+app.use('/api/attendance',attendanceRouter);
+app.use('/api/leave',leaveRouter)
 
 
 

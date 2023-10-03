@@ -1,5 +1,5 @@
 const isValidGender = value => {
-    if (value !== 'male' && value !== 'female') {
+    if (value !== 'MALE' && value !== 'FEMALE') {
         throw new Error('Gender must be either "male" or "female"');
     }
     return true;

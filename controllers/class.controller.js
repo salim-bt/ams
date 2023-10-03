@@ -49,9 +49,10 @@ const updateClass = async (req,res)=>{
 		}
 	});
 
-	res.status(200).json([{
-		updatedClass
-	}])
+	res.status(201).json({
+		updatedClass,
+        msg:"class updated successfully"
+	})
 }
 
 

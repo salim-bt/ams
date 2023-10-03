@@ -22,7 +22,7 @@ router.post(
         body('programme').custom(isValidDepartment),
         body('semester').custom(isValidSemester),
         body('password').isLength({min: 5}),
-        body('name').isAlpha()
+        body('name')
     ], register)
 
 module.exports = router;
