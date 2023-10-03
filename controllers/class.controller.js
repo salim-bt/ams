@@ -55,6 +55,58 @@ const updateClass = async (req,res)=>{
 	})
 }
 
+const deleteClass = async (req,res)=>{
+    const {classId } = req.body;
 
+    //check if class exists
+    const classToDelete = await db.class.findFirst({
+        where:{
+            id:classId
+        }
+    })
 
-module.exports = {createClass}
+    if (!classToDelete){
+        res.status(401).json({msg:"class not found, deletion failed"})
+    }
+
+    const deletedClass = await db.class.delete({
+        where:{
+            id:classId
+        }
+    })
+
+    res.status(202).json({msg:"resource deleted successfully"})
+
+}
+
+const getAllClasses = async (req,res)=>{
+
+    const classes = await db.class.findMany()
+
+    res.status(200).json(classes)
+}
+
+const getClass = async (req,res) =>{
+
+    const {classId} = req.params;
+
+    const requestedClass = await db.class.findFirst({
+        where:{
+            id:classId
+        }
+    })
+
+    if(!requestedClass){
+        res.status(401).json({msg:"class not found"})
+    }
+
+    res.status(200).json(requestedClass)
+}
+
+module.exports = {
+    createClass,
+    updateClass,
+    deleteClass,
+    getClass,
+    getAllClasses
+}
