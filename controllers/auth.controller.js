@@ -12,7 +12,7 @@ const login = async (req, res) => {
     const {studentId, password} = req.body;
 
     try {
-        const user = await db.student.findUnique({
+        const user = await db.account.findUnique({
             where: {
                 studentId
             }
@@ -25,11 +25,24 @@ const login = async (req, res) => {
             return res.status(401).json({message: 'Invalid password'});
         }
 
-        const isAdmin = true
-
         const accessToken = generateAccessToken(user.studentId)
         const refreshToken = generateRefreshToken(user.studentId)
-        res.status(200).json({accessToken, refreshToken})
+
+        const student = await db.student.findFirst({
+            where:{
+                studentId
+            }
+        })
+
+        const classDetails = await db.class.findFirst({
+            where:{
+                id:student.classId
+            }
+        })
+
+        console.log(student,classDetails)
+
+        res.status(200).json({accessToken, refreshToken,role:user.role,student,classDetails})
 
     } catch (err) {
         console.error(err);
@@ -62,9 +75,22 @@ const register = async (req, res, next) => {
             where:{
                 semester,
                 programme:department,
-
-
+                academicYear:"2023",
+                section:"1"
             }
+        })
+
+        const student = await db.student.create({
+            studentId,
+            email,
+            gender,
+            classId:studentClass.id,
+            name
+        })
+
+        const account = await db.account.create({
+            studentId,
+            password
         })
 
         res.status(201).json({message: 'User registered successfully', user: newUser});

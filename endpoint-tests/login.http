@@ -2,6 +2,6 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "studentId":"02200163",
-  "password": "salim"
+  "studentId":"02200147",
+  "password": "jigme123"
 }
