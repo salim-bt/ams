@@ -12,6 +12,7 @@ model Student {
   email      String       @unique
   name       String
   classId    String
+  createdAt  DateTime     @default(now())
   gender     Gender       @default(MALE)
   account    Account?
   attendance Attendance[]
