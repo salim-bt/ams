@@ -46,6 +46,52 @@ const updateStudent = async(req,res)=>{
     res.status(204).json({msg:"user updated successfully",updatedStudent})
 }
 
+const getAllStudents = async (req,res)=>{
+    const students = await db.student.findMany();
+    res.status(200).json(students)
+}
+const getAllStudentsFromClass = async (req,res)=>{
+
+    const {classId} = req.params;
+
+    const students = await db.student.findMany({
+        where:{
+            classId
+        }
+    })
+
+    res.status(200).json(students)
+}
+
+const createStudent = async(req,res)=>{
+    const {
+        studentId,
+        name,
+        email,
+        gender,
+        classId
+    } = req.body;
+
+    const student = await db.student.create({
+        data:{
+            studentId,
+            name,
+            email,
+            gender,
+            classId
+        }
+    })
+
+    res.status(201).json({student,msg:"student created successfully"})
+}
 
 
-module.exports = {getStudent}
+
+
+module.exports = {
+    getStudent,
+    createStudent,
+    getAllStudentsFromClass,
+    getAllStudents,
+    updateStudent
+}
