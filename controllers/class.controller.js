@@ -34,4 +34,26 @@ const createClass = async (req,res)=>{
 
 }
 
+const updateClass = async (req,res)=>{
+	const {classId,programme,academicYear,semester,section} = req.body;
+
+	const updatedClass = await db.class.update({
+		where:{
+			id:classId
+		},
+		update:{
+			programme,
+			academicYear,
+			semester,
+			section
+		}
+	});
+
+	res.status(200).json([{
+		updatedClass
+	}])
+}
+
+
+
 module.exports = {createClass}
