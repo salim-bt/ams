@@ -5,6 +5,7 @@ const logger = require('morgan');
 const cors = require('cors')
 
 const authRouter = require('./routes/auth');
+const eventsRouter = require('./routes/event');
 const app = express();
 
 app.use(logger('dev'));
@@ -18,6 +19,7 @@ app.use(cors())
  * Routes
  * */
 app.use('/api/auth',authRouter);
+app.use('/api/events', eventsRouter)
 
 
 
