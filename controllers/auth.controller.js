@@ -29,20 +29,20 @@ const login = async (req, res) => {
         const refreshToken = generateRefreshToken(user.studentId)
 
         const student = await db.student.findFirst({
-            where:{
+            where: {
                 studentId
             }
         })
 
         const classDetails = await db.class.findFirst({
-            where:{
-                id:student.classId
+            where: {
+                id: student.classId
             }
         })
 
-        console.log(student,classDetails)
+        console.log(student, classDetails)
 
-        res.status(200).json({accessToken, refreshToken,role:user.role,student,classDetails})
+        res.status(200).json({accessToken, refreshToken, role: user.role, student, classDetails})
 
     } catch (err) {
         console.error(err);
@@ -58,22 +58,32 @@ const register = async (req, res) => {
         return res.status(400).json({errors: errors.array()});
     }
 
-    const {studentId, name,email, gender, programme, semester, password, section, academicYear} = req.body;
+    const {
+        studentId,
+        name,
+        email,
+        gender,
+        programme,
+        semester,
+        password,
+        section,
+        academicYear
+    } = req.body;
 
     // check if student already registered
     const account = await db.account.findUnique({
-        where:{
+        where: {
             studentId
         }
     })
 
-    if (account){
-        res.status(500).json({msg:"user already registered"})
+    if (account) {
+        res.status(500).json({msg: "user already registered"})
     }
 
     try {
         const studentClass = await db.class.findFirst({
-            where:{
+            where: {
                 semester,
                 programme,
                 academicYear,
@@ -82,29 +92,29 @@ const register = async (req, res) => {
         })
 
         const student = await db.student.upsert({
-            where:{
+            where: {
                 studentId
             },
-            update:{
-              name,
-              email,
-              gender
+            update: {
+                name,
+                email,
+                gender
             },
-            create:{
+            create: {
                 studentId,
                 name,
                 email,
                 gender,
-                classId:studentClass.id
+                classId: studentClass.id
             }
         })
 
-        const hashedPassword = await hash(password,10)
+        const hashedPassword = await hash(password, 10)
 
         await db.account.create({
-            data:{
+            data: {
                 studentId,
-                password:hashedPassword
+                password: hashedPassword
             }
         })
 

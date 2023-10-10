@@ -16,17 +16,19 @@ model Student {
   gender     Gender       @default(MALE)
   account    Account?
   attendance Attendance[]
+  assignent  Assignment[]
   leave      Leave[]
   Class      Class        @relation(fields: [classId], references: [id])
 }
 
 model Class {
-  id           String    @id @default(uuid())
+  id           String       @id @default(uuid())
   programme    String
   academicYear String
   semester     String
   section      String
   students     Student[]
+  assignment   Assignment[]
 
   @@unique([programme, academicYear, semester, section])
 }
@@ -35,7 +37,7 @@ model Account {
   studentId     String  @id @db.Char(8)
   password      String
   refreshTokens String?
-  role          Role    @default(USER)
+  role          Role    @default(student)
   student       Student @relation(fields: [studentId], references: [studentId])
 }
 
@@ -44,10 +46,21 @@ model Event {
   title       String
   description String
   startTime   DateTime
-  duration    String
   eventType   String
+  duration    String
   attendance  Attendance[]
+  assignment  Assignment[]
   leave       Leave[]
+}
+
+model Assignment {
+  id        String  @id @default(uuid())
+  Class     Class?  @relation(fields: [classId], references: [id])
+  classId   String
+  Student   Student @relation(fields: [studentId], references: [studentId])
+  studentId String  @db.Char(8)
+  Event     Event   @relation(fields: [eventId], references: [id])
+  eventId   String
 }
 
 model Attendance {
@@ -75,9 +88,9 @@ model Leave {
 }
 
 enum Role {
-  USER
-  ADMIN
-  MOD
+  student
+  admin
+  councilor
 }
 
 enum AttendanceStatus {

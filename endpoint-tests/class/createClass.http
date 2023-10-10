@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/class/create-class
+Content-Type: application/json
+
+{
+  "semester": "vii",
+  "programme": "Information Technology",
+  "section": "1",
+  "academicYear": "2023"
+}

@@ -1,0 +1,6 @@
+DELETE http://localhost:3000/api/class/delete-class
+Content-Type: application/json
+
+{
+  "classId": "c22e10df-e0ff-4265-a5f9-bfbd2bc3e9e5"
+}
