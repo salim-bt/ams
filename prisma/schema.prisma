@@ -44,6 +44,7 @@ model Event {
   title       String
   description String
   startTime   DateTime
+  duration    String
   eventType   String
   attendance  Attendance[]
   leave       Leave[]
