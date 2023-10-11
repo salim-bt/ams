@@ -1,11 +1,11 @@
-const {db} =  require("../utils/db");
+const {db} = require("../utils/db");
 
-const getStudent = async(req,res)=>{
+const getStudent = async (req, res) => {
 
     const {studentId} = req.params;
 
     const student = await db.student.findFirst({
-        where:{
+        where: {
             studentId
         }
     });
@@ -13,16 +13,16 @@ const getStudent = async(req,res)=>{
 
     const {role} = await db.account.findFirst(
         {
-            where:{
+            where: {
                 studentId
             }
         }
     )
 
-    res.status(200).json({...student,role})
+    res.status(200).json({...student, role})
 }
 
-const updateStudent = async(req,res)=>{
+const updateStudent = async (req, res) => {
     const {
         studentId,
         name,
@@ -32,10 +32,10 @@ const updateStudent = async(req,res)=>{
     } = req.body;
 
     const updatedStudent = await db.student.update({
-        where:{
+        where: {
             studentId
         },
-        data:{
+        data: {
             name,
             email,
             gender,
@@ -43,19 +43,39 @@ const updateStudent = async(req,res)=>{
         }
     })
 
-    res.status(204).json({msg:"user updated successfully",updatedStudent})
+    res.status(204).json({msg: "user updated successfully", updatedStudent})
 }
 
-const getAllStudents = async (req,res)=>{
-    const students = await db.student.findMany();
+const getAllStudents = async (req, res) => {
+    const students = await db.student.findMany({
+        select: {
+            studentId: true,
+            email: true,
+            name: true,
+            createdAt: true,
+            gender: true,
+            account: {
+                select: {
+                    role: true,
+                },
+            },
+            Class: {
+                select: {
+                    programme: true,
+                    academicYear: true,
+                    semester: true,
+                },
+            },
+        },
+    });
     res.status(200).json(students)
 }
-const getAllStudentsFromClass = async (req,res)=>{
+const getAllStudentsFromClass = async (req, res) => {
 
     const {classId} = req.params;
 
     const students = await db.student.findMany({
-        where:{
+        where: {
             classId
         }
     })
@@ -63,7 +83,7 @@ const getAllStudentsFromClass = async (req,res)=>{
     res.status(200).json(students)
 }
 
-const createStudent = async(req,res)=>{
+const createStudent = async (req, res) => {
     const {
         studentId,
         name,
@@ -73,7 +93,7 @@ const createStudent = async(req,res)=>{
     } = req.body;
 
     const student = await db.student.create({
-        data:{
+        data: {
             studentId,
             name,
             email,
@@ -82,10 +102,8 @@ const createStudent = async(req,res)=>{
         }
     })
 
-    res.status(201).json({student,msg:"student created successfully"})
+    res.status(201).json({student, msg: "student created successfully"})
 }
-
-
 
 
 module.exports = {

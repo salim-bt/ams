@@ -2,13 +2,13 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "studentId": "02200147",
-  "name": "Jigme Tenzin Chhogyal",
-  "email": "02200147.cst@rub.edu.bt",
+  "studentId": "02200163",
+  "name": "Salim Pradhan",
+  "email": "02200163.cst@rub.edu.bt",
   "gender": "MALE",
   "semester": "vii",
   "programme": "Information Technology",
   "section": "1",
   "academicYear": "2023",
-  "password": "jigme123"
+  "password": "salim123"
 }
