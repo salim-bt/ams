@@ -83,6 +83,17 @@ const getAllStudentsFromClass = async (req, res) => {
     res.status(200).json(students)
 }
 
+const getAllCouncilors = async (req, res) => {
+    const students = await db.student.findMany({
+        where: {
+            account: {
+                role: "councilor"
+            }
+        }
+    });
+    res.status(200).json(students)
+}
+
 const createStudent = async (req, res) => {
     const {
         studentId,
@@ -111,5 +122,6 @@ module.exports = {
     createStudent,
     getAllStudentsFromClass,
     getAllStudents,
-    updateStudent
+    updateStudent,
+    getAllCouncilors
 }

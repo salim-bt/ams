@@ -86,8 +86,8 @@ const register = async (req, res) => {
             where: {
                 semester,
                 programme,
-                academicYear,
-                section
+                academicYear: "2023",
+                section: "1"
             }
         })
 

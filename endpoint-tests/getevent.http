@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/events/getAllEvents
+GET http://localhost:3000/api/events/get-event-by-id/1d4b53ca-b4f2-4a37-8115-33f69acf4a50
