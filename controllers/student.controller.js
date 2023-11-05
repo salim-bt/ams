@@ -116,8 +116,20 @@ const createStudent = async (req, res) => {
     res.status(201).json({student, msg: "student created successfully"})
 }
 
+const getStudentEventsInfo = (req,res) =>{
+
+    const responseData = {
+        "total_events":0,
+        "total_presents":0,
+        "total_absents":0,
+        "total_leaves":0
+    }
+    res.status(200).json(responseData)
+}
+
 
 module.exports = {
+    getStudentEventsInfo,
     getStudent,
     createStudent,
     getAllStudentsFromClass,

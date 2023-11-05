@@ -1,4 +1,5 @@
 const {db} = require("../utils/db");
+const {assignment} = require("../utils/assignment");
 
 const createEvent = async (req, res) => {
     try {
@@ -28,6 +29,24 @@ const createEvent = async (req, res) => {
                 duration,
                 eventType,
             },
+        });
+
+        const councilors = await db.account.findMany({
+            where:{
+                role:"councilor"
+            }
+        })
+
+        const councilorIds = councilors.map(student=>student.studentId);
+
+        const classes = await db.class.findMany();
+
+        const classIds = classes.map(cls => cls.id)
+
+        classIds.map(classId=>{
+            const randomIndex = Math.floor(Math.random() * councilorIds.length)
+            const randomCouncilorId = councilorIds.splice(randomIndex, 1)[0]
+            assignment(event.id,classId,randomCouncilorId)
         });
 
         res.status(200).json(event);
