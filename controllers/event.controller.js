@@ -1,8 +1,8 @@
-const {db} = require("../utils/db");
+const { db } = require("../utils/db");
 
 const createEvent = async (req, res) => {
     try {
-        const {title, description, startTime, duration, eventType} = req.body;
+        const { title, description, startTime, duration, eventType } = req.body;
         let iso8601Date;
         const parts = startTime.split('-');
         if (parts.length === 3) {
@@ -33,7 +33,7 @@ const createEvent = async (req, res) => {
         res.status(200).json(event);
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: 'Internal server error'});
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
@@ -46,14 +46,36 @@ const getAllEvents = async (req, res) => {
         res.status(200).json(events);
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: 'Internal server error'});
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const getFutureEvents = async (req, res) => {
+    try {
+        // Get the current date and time
+        const currentDateTime = new Date().toISOString();
+
+        // Retrieve all events that have a startTime greater than or equal to the current date and time
+        const futureEvents = await db.event.findMany({
+            where: {
+                startTime: {
+                    gte: currentDateTime,
+                },
+            },
+        });
+
+        // Send the future events as a JSON response
+        res.status(200).json(futureEvents);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
 const editEventById = async (req, res) => {
     try {
         const id = req.params.id; // Get the event ID from the URL parameters
-        const {title, description, startTime, duration, eventType} = req.body;
+        const { title, description, startTime, duration, eventType } = req.body;
 
         // Check if the event with the specified ID exists
         const existingEvent = await db.event.findUnique({
@@ -63,7 +85,7 @@ const editEventById = async (req, res) => {
         });
 
         if (!existingEvent) {
-            return res.status(404).json({error: 'Event not found'});
+            return res.status(404).json({ error: 'Event not found' });
         }
 
         // Update the event with the new data
@@ -84,7 +106,7 @@ const editEventById = async (req, res) => {
         res.status(200).json(updatedEvent);
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: 'Internal server error'});
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
@@ -100,7 +122,7 @@ const deleteEventById = async (req, res) => {
         });
 
         if (!existingEvent) {
-            return res.status(404).json({error: 'Event not found'});
+            return res.status(404).json({ error: 'Event not found' });
         }
 
         // Delete the event by ID
@@ -114,7 +136,7 @@ const deleteEventById = async (req, res) => {
         res.status(204).end(); // Changed status code to 204 (No Content) for successful deletion
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: 'Internal server error'});
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
@@ -130,7 +152,7 @@ const getEventById = async (req, res) => {
 }
 
 module.exports = {
-    createEvent, getAllEvents, editEventById, deleteEventById, getEventById
+    createEvent, getAllEvents, editEventById, deleteEventById, getEventById, getFutureEvents
 };
 
 

@@ -105,7 +105,7 @@ const register = async (req, res) => {
                 name,
                 email,
                 gender,
-                classId: studentClass.id
+                classId: "18022506-8e3b-456d-b60c-6d411d378675"
             }
         })
 
