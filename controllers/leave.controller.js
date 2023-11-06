@@ -3,13 +3,13 @@ const { db } = require('../utils/db');
 const createLeave = async (req, res) => {
   try {
     const { studentId, eventId, explanation, attachmentURL } = req.body;
-    const leaveStatus = 'PENDING'; // Set the default leave status
+    // const leaveStatus = 'PENDING'; // Set the default leave status
+    console.log(req.body)
 
     const leave = await db.leave.create({
       data: {
         studentId,
         eventId,
-        status: leaveStatus,
         explanation,
         attachmentURL,
       },
@@ -21,6 +21,8 @@ const createLeave = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
 
 const getLeaveById = async (req, res) => {
   try {

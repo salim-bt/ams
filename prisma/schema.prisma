@@ -12,6 +12,7 @@ model Student {
   email      String       @unique
   name       String
   classId    String
+  
   createdAt  DateTime     @default(now())
   gender     Gender       @default(MALE)
   account    Account?
@@ -78,7 +79,7 @@ model Leave {
   id            String      @id @default(uuid())
   studentId     String      @db.Char(8)
   eventId       String
-  status        LeaveStatus @default(PENDING)
+  status        LeaveStatus @default(PENDING) 
   explanation   String
   attachmentURL String?
   Event         Event       @relation(fields: [eventId], references: [id])

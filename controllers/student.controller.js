@@ -127,8 +127,43 @@ const getStudentEventsInfo = (req,res) =>{
     res.status(200).json(responseData)
 }
 
+const getStudentInfo = async (req, res) => {
+    const { studentId } = req.params;
+
+    const studentInfo = await db.student.findFirst({
+        where: {
+            studentId
+        },
+        select: {
+            studentId: true,
+            name: true,
+            email: true,
+            gender: true,
+            classId: true,
+            Class: {
+                select: {
+                    programme: true,
+                    semester: true
+                }
+            },
+            account: {
+                select: {
+                    role: true
+                }
+            }
+        }
+    });
+
+    if (!studentInfo) {
+        return res.status(404).json({ error: 'Student not found' });
+    }
+
+    res.status(200).json(studentInfo);
+}
+
 
 module.exports = {
+    getStudentInfo,
     getStudentEventsInfo,
     getStudent,
     createStudent,

@@ -19,25 +19,7 @@ const takeAttendance = async (req, res) => {
 };
 
 const getAllAttendanceOfStudent = (req,res)=>{
-    const data = [
-        {
-            "event_name":"Morning Assembly",
-            "date":"2023-11-05T10:38:31.688Z",
-            "status":"PRESENT"
-        },
-        {
-            "event_name":"SUPW",
-            "date":"2023-10-05T10:38:31.688Z",
-            "status":"PRESENT"
-        },
-        {
-            "event_name":"Morning Assembly",
-            "date":"2023-10-05T10:38:31.688Z",
-            "status":"PRESENT"
-        }
-    ]
-
-    res.status(200).json(data)
+    
 }
 
 module.exports = {

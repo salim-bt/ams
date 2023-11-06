@@ -4,6 +4,7 @@ const router = express.Router();
 const {v4: uuidV4} = require('uuid');
 const {
     getStudent,
+    getStudentInfo,
     getAllStudents,
     getAllStudentsFromClass,
     updateStudent,
@@ -11,6 +12,7 @@ const {
 } = require("../controllers/student.controller");
 
 router.get("/get-student/:studentId", getStudent)
+router.get("/get-student-info/:studentId", getStudentInfo)
 router.get("/get-all-students", getAllStudents)
 router.get("/get-all-students/class/:classId", getAllStudentsFromClass)
 router.put("/update-student/:studentId", updateStudent)
