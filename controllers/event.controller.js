@@ -1,5 +1,6 @@
 const {db} = require("../utils/db");
 const {assignment} = require("../utils/assignment");
+const {allocate} = require("../utils/allocate");
 
 const createEvent = async (req, res) => {
     try {
@@ -50,8 +51,11 @@ const createEvent = async (req, res) => {
         });
 
         const students = await db.student.findMany();
-        const studentIds = councilors.map(student=>student.studentId);
+        const studentIds = students.map(student=>student.studentId);
 
+        studentIds.map(studentId=>{
+            allocate(event.id,studentId)
+        })
 
         res.status(200).json(event);
     } catch (error) {
