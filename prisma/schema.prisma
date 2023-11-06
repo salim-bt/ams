@@ -15,8 +15,8 @@ model Student {
   createdAt  DateTime     @default(now())
   gender     Gender       @default(MALE)
   account    Account?
-  attendance Attendance[]
   assignent  Assignment[]
+  attendance Attendance[]
   leave      Leave[]
   Class      Class        @relation(fields: [classId], references: [id])
 }
@@ -27,8 +27,8 @@ model Class {
   academicYear String
   semester     String
   section      String
-  students     Student[]
   assignment   Assignment[]
+  students     Student[]
 
   @@unique([programme, academicYear, semester, section])
 }
@@ -48,19 +48,19 @@ model Event {
   startTime   DateTime
   eventType   String
   duration    String
-  attendance  Attendance[]
   assignment  Assignment[]
+  attendance  Attendance[]
   leave       Leave[]
 }
 
 model Assignment {
   id        String  @id @default(uuid())
-  Class     Class?  @relation(fields: [classId], references: [id])
   classId   String
-  Student   Student @relation(fields: [studentId], references: [studentId])
   studentId String  @db.Char(8)
-  Event     Event   @relation(fields: [eventId], references: [id])
   eventId   String
+  Class     Class   @relation(fields: [classId], references: [id])
+  Event     Event   @relation(fields: [eventId], references: [id])
+  Student   Student @relation(fields: [studentId], references: [studentId])
 }
 
 model Attendance {
