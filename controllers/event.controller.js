@@ -49,6 +49,10 @@ const createEvent = async (req, res) => {
             assignment(event.id,classId,randomCouncilorId)
         });
 
+        const students = await db.student.findMany();
+        const studentIds = councilors.map(student=>student.studentId);
+
+
         res.status(200).json(event);
     } catch (error) {
         console.error(error);
