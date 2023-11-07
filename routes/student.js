@@ -20,6 +20,6 @@ router.put("/update-student", updateStudent)
 router.post("/create-student", createStudent)
 router.get("/get-all-councilor", getAllCouncilors)
 router.get("/get-student-dashboard-info/:studentId",getStudentEventsInfo)
-router.post("/delete-student", deleteStudent)
+router.delete("/delete-student/:studentId", deleteStudent)
 
 module.exports = router;

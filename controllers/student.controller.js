@@ -29,22 +29,30 @@ const updateStudent = async (req, res) => {
         email,
         gender,
         classId,
+        role // Include the role field in the request body
     } = req.body;
 
     const updatedStudent = await db.student.update({
         where: {
             studentId
         },
+        
         data: {
             name,
             email,
             gender,
-            classId
+            classId,
+            account: { // Update the role in the account relationship
+                update: {
+                    role
+                }
+            }
         }
     })
-
-    res.status(204).json({msg: "user updated successfully", updatedStudent})
+    
+    res.status(204).json({ msg: "Student updated successfully", updatedStudent });
 }
+
 
 const getAllStudents = async (req, res) => {
     const students = await db.student.findMany({
