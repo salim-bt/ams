@@ -29,22 +29,30 @@ const updateStudent = async (req, res) => {
         email,
         gender,
         classId,
+        role // Include the role field in the request body
     } = req.body;
 
     const updatedStudent = await db.student.update({
         where: {
             studentId
         },
+        
         data: {
             name,
             email,
             gender,
-            classId
+            classId,
+            account: { // Update the role in the account relationship
+                update: {
+                    role
+                }
+            }
         }
     })
-
-    res.status(204).json({msg: "user updated successfully", updatedStudent})
+    
+    res.status(204).json({ msg: "Student updated successfully", updatedStudent });
 }
+
 
 const getAllStudents = async (req, res) => {
     const students = await db.student.findMany({
@@ -160,7 +168,36 @@ const getStudentInfo = async (req, res) => {
 
     res.status(200).json(studentInfo);
 }
+const deleteStudent = async (req, res) => {
+    const { studentId } = req.params;
 
+    // Check if the student exists
+    const existingStudent = await db.student.findFirst({
+        where: {
+            studentId
+        }
+    });
+
+    if (!existingStudent) {
+        return res.status(404).json({ error: 'Student not found' });
+    }
+
+    try {
+        // Delete the student and associated data
+        await db.student.delete({
+            where: {
+                studentId
+            }
+        });
+
+        // Optionally, you can delete related data such as assignments, attendance, and leaves here
+
+        res.status(204).json({ msg: 'Student deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting student:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
 
 module.exports = {
     getStudentInfo,
@@ -170,5 +207,6 @@ module.exports = {
     getAllStudentsFromClass,
     getAllStudents,
     updateStudent,
-    getAllCouncilors
+    getAllCouncilors,
+    deleteStudent
 }

@@ -10,7 +10,8 @@ const classRouter = require('./routes/class');
 const studentRouter = require('./routes/student');
 const attendanceRouter = require('./routes/attendance');
 const leaveRouter = require('./routes/leave');
-const uploadRouter = require('./routes/upload')
+const uploadRouter = require('./routes/upload');
+const reportRouter = require('./routes/report');
 const app = express();
 
 app.use(logger('dev'));
@@ -28,8 +29,9 @@ app.use('/api/student',studentRouter);
 app.use('/api/events',eventRouter);
 app.use('/api/class',classRouter);
 app.use('/api/attendance',attendanceRouter);
-app.use('/api/leave',leaveRouter)
-app.use('/api/file',uploadRouter)
+app.use('/api/leave',leaveRouter);
+app.use('/api/file',uploadRouter);
+app.use('/api/report',reportRouter);
 
 
 

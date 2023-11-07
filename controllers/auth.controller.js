@@ -86,8 +86,8 @@ const register = async (req, res) => {
             where: {
                 semester,
                 programme,
-                academicYear: "2023",
-                section: "1"
+                academicYear: academicYear,
+                section: section
             }
         })
 
@@ -105,7 +105,7 @@ const register = async (req, res) => {
                 name,
                 email,
                 gender,
-                classId: "18022506-8e3b-456d-b60c-6d411d378675"
+                classId: studentClass.id
             }
         })
 
