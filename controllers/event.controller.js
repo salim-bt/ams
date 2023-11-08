@@ -39,6 +39,7 @@ const createEvent = async (req, res) => {
         })
 
         const councilorIds = councilors.map(student=>student.studentId);
+        console.log(councilorIds)
 
         const classes = await db.class.findMany();
 
@@ -46,12 +47,13 @@ const createEvent = async (req, res) => {
 
         classIds.map(classId=>{
             const randomIndex = Math.floor(Math.random() * councilorIds.length)
-            const randomCouncilorId = councilorIds.splice(randomIndex, 1)[0]
+            const randomCouncilorId = councilorIds[randomIndex]
             assignment(event.id,classId,randomCouncilorId)
         });
 
         const students = await db.student.findMany();
         const studentIds = students.map(student=>student.studentId);
+        console.log(studentIds)
 
         studentIds.map(studentId=>{
             allocate(event.id,studentId)

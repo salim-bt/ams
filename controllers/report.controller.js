@@ -7,6 +7,7 @@ const getWeeklyReport = async (req, res) => {
 
         // Calculate the start date (Monday) of the current week
         const startDate = new Date(currentDate);
+        startDate.setHours(0, 0, 0, 0);
         startDate.setDate(startDate.getDate() - (currentDate.getDay() + 6) % 7);
 
         // Calculate the end date (current date and time)
@@ -177,8 +178,7 @@ const getAllWeeklyClassReports = async (req, res) => {
                     startTime: {
                         gte: startDateTime,
                         lte: endDateTime,
-                    },
-                    classId: classInfo.id,
+                    }
                 },
             });
 

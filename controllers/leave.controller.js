@@ -33,7 +33,22 @@ const getLeaveById = async (req, res) => {
     });
 
     if (leave) {
-      res.status(200).json(leave);
+      const event = await db.event.findUnique({
+        where: {
+          id: leave.eventId,
+        },
+      });
+
+      if (event) {
+        const leaveWithEvent = {
+          ...leave,
+          eventTitle: event.title,
+        };
+
+        res.status(200).json(leaveWithEvent);
+      } else {
+        res.status(404).json({ error: 'Event not found for the leave' });
+      }
     } else {
       res.status(404).json({ error: 'Leave not found' });
     }
@@ -43,11 +58,27 @@ const getLeaveById = async (req, res) => {
   }
 };
 
+
 const getAllLeave = async (req, res) => {
   try {
     const leave = await db.leave.findMany();
+    
+    const leaveWithEventTitles = await Promise.all(leave.map(async (leaveItem) => {
+      const event = await db.event.findUnique({
+        where: {
+          id: leaveItem.eventId
+        },
+        select: {
+          title: true
+        }
+      });
+      return {
+        ...leaveItem,
+        eventTitle: event.title
+      };
+    }));
 
-    res.status(200).json(leave);
+    res.status(200).json(leaveWithEventTitles);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -57,7 +88,7 @@ const getAllLeave = async (req, res) => {
 const updateLeaveById = async (req, res) => {
   try {
     const id = req.params.id;
-    const { studentId, eventId, explanation, attachmentURL } = req.body;
+    const { studentId, eventId, status, explanation, attachmentURL } = req.body;
 
     const existingLeave = await db.leave.findUnique({
       where: {
@@ -76,6 +107,7 @@ const updateLeaveById = async (req, res) => {
       data: {
         studentId,
         eventId,
+        status,
         explanation,
         attachmentURL,
       },
